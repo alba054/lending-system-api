@@ -1,6 +1,7 @@
 import { LentItemEntity } from "../../../entity/lentItem/LentItemEntity";
 
 interface ILentItemDTO {
+  id: string;
   status: "RETURNED" | "LENT";
   lendStartTime: number;
   lendEndTime: number;
@@ -21,6 +22,7 @@ interface ILentItemDTO {
 
 export const LentItemDTO = (lentItem: LentItemEntity) => {
   return {
+    id: lentItem.id,
     description: lentItem.description,
     lendEndTime: lentItem.lendEndTime,
     lendStartTime: lentItem.lendStartTime,

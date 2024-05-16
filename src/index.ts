@@ -1,5 +1,7 @@
 import { ItemHandlerImpl } from "./api/item/handler/ItemHandlerImpl";
 import { ItemRouterImpl } from "./api/item/router/ItemRouterImpl";
+import { LentItemHandlerImpl } from "./api/lentItem/handler/LentItemHandlerImpl";
+import { LentItemRouterImpl } from "./api/lentItem/router/LentItemRouterImpl";
 import { UserHandlerImpl } from "./api/user/handler/UserHandlerImpl";
 import { UserRouterImpl } from "./api/user/router/UserRouterImpl";
 import { hashImpl } from "./config/crypto";
@@ -32,6 +34,7 @@ const authService = new AuthServiceImpl();
 const studentLendItemService = new StudentLendItemServiceImpl({
   studentLendItemRepository,
   studentRepository,
+  lentItemRepository,
 });
 const lentItemService = new LentItemServiceImpl({ lentItemRepository });
 // * validators
@@ -45,6 +48,10 @@ const itemHandler = new ItemHandlerImpl(
   { itemService, studentLendItemService, lentItemService },
   { schemaValidator }
 );
+const lentItemHandler = new LentItemHandlerImpl(
+  { itemService, studentLendItemService, lentItemService },
+  { schemaValidator }
+);
 // * misc
 const basicAuthMiddleware = new BasicAuthMiddleware(userService, hashImpl);
 const authorizationMiddleware = new AuthorizationBearer(userService);
@@ -55,7 +62,11 @@ const userRouter = new UserRouterImpl(
   authorizationMiddleware
 );
 const itemRouter = new ItemRouterImpl(itemHandler, authorizationMiddleware);
+const lentItemRouter = new LentItemRouterImpl(
+  lentItemHandler,
+  authorizationMiddleware
+);
 
 connectDatabase();
 
-startServer([userRouter, itemRouter]).start();
+startServer([userRouter, itemRouter, lentItemRouter]).start();

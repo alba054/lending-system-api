@@ -11,6 +11,10 @@ export class ItemServiceImpl extends ItemService {
     super(repository);
   }
 
+  async getItemsNoPagination(): Promise<ItemEntity[]> {
+    return this.itemRepository.getItemsNoPagination();
+  }
+
   async getItemById(itemId: string): Promise<ItemEntity> {
     const item = await this.itemRepository.getItemById(itemId);
 

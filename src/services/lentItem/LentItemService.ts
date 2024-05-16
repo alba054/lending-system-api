@@ -8,6 +8,8 @@ export abstract class LentItemService {
     this.lentItemRepository = repository.lentItemRepository;
   }
 
+  abstract getLentItemsNoPagination(): Promise<LentItemEntity[]>;
+
   abstract getLentItems(
     page?: number | undefined,
     search?: string | undefined

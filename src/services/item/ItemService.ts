@@ -10,6 +10,8 @@ export abstract class ItemService {
     this.itemRepository = repository.itemRepository;
   }
 
+  abstract getItemsNoPagination(): Promise<ItemEntity[]>;
+
   abstract getItemById(itemId: string): Promise<ItemEntity>;
 
   abstract updateItemById(

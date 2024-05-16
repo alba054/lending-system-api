@@ -7,6 +7,39 @@ import { StudentLendItemRepository } from "./StudentLendItemRepository";
 import { prismaDb } from "../../../config/database/PrismaORMDBConfig";
 
 export class StudentLendItemPrismaRepositoryImpl extends StudentLendItemRepository {
+  async updateStatusLentItemById(
+    lentItemId: string,
+    itemId: string,
+    isReturned: boolean
+  ): Promise<void> {
+    try {
+      await prismaDb.db?.$transaction([
+        prismaDb.db.lentItem.update({
+          data: {
+            returnTime: isReturned
+              ? Math.floor(new Date().getTime() / 1000)
+              : 0,
+          },
+          where: { id: lentItemId },
+        }),
+        prismaDb.db.item.update({
+          where: { id: itemId },
+          data: {
+            stock: {
+              increment: isReturned ? 1 : -1,
+            },
+          },
+        }),
+      ]);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new BadRequestError(ERRORCODE.BAD_REQUEST_ERROR, error.message);
+      } else if (error instanceof Error) {
+        throw new InternalServerError(error.message);
+      }
+    }
+  }
+
   async studentLendItem(lendItem: LentItemEntity): Promise<void> {
     try {
       await prismaDb.db?.$transaction([

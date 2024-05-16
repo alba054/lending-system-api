@@ -44,10 +44,7 @@ export class ItemHandlerImpl extends ItemHandler {
   ): Promise<any> {
     const { page, s } = req.query;
 
-    const lentItems = await this.lentItemService.getLentItems(
-      parseInt(String(page ?? "1")),
-      String(s ?? "")
-    );
+    const lentItems = await this.lentItemService.getLentItemsNoPagination();
 
     return res
       .status(200)
@@ -161,10 +158,7 @@ export class ItemHandlerImpl extends ItemHandler {
   ): Promise<any> {
     const { page, s } = req.query;
 
-    const items = await this.itemService.getItems(
-      parseInt(String(page ?? "1")),
-      String(s ?? "")
-    );
+    const items = await this.itemService.getItemsNoPagination();
 
     return res
       .status(200)

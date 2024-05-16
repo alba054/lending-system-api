@@ -8,6 +8,22 @@ import { ItemEntity } from "../../entity/item/ItemEntity";
 import { IPutItemPayload } from "../../utils/interfaces/request/IPutItemPayload";
 
 export class ItemPrismaRepositoryImpl extends ItemRepository {
+  async getItemsNoPagination(): Promise<ItemEntity[]> {
+    const items = await prismaDb.db?.item.findMany({});
+
+    return (
+      items?.map((i) => {
+        return new ItemEntity(i.name ?? "", {
+          description: i.description ?? "",
+          id: i.id,
+          stock: i.stock,
+          thumbnail: i.thumbnail ?? "",
+          totalItem: i.totalItem,
+        });
+      }) ?? []
+    );
+  }
+
   async updateItemById(
     itemId: string,
     payload: IPutItemPayload

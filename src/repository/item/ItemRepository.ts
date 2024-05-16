@@ -2,6 +2,8 @@ import { ItemEntity } from "../../entity/item/ItemEntity";
 import { IPutItemPayload } from "../../utils/interfaces/request/IPutItemPayload";
 
 export abstract class ItemRepository {
+  abstract getItemsNoPagination(): ItemEntity[] | PromiseLike<ItemEntity[]>;
+
   abstract updateItemById(
     itemId: string,
     payload: IPutItemPayload
