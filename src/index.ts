@@ -1,3 +1,5 @@
+import { FileHandlerImpl } from "./api/file/handler/FileHandlerImpl";
+import { FileRouterImpl } from "./api/file/router/FileRouterImpl";
 import { ItemHandlerImpl } from "./api/item/handler/ItemHandlerImpl";
 import { ItemRouterImpl } from "./api/item/router/ItemRouterImpl";
 import { LentItemHandlerImpl } from "./api/lentItem/handler/LentItemHandlerImpl";
@@ -52,6 +54,7 @@ const lentItemHandler = new LentItemHandlerImpl(
   { itemService, studentLendItemService, lentItemService },
   { schemaValidator }
 );
+const fileHandler = new FileHandlerImpl();
 // * misc
 const basicAuthMiddleware = new BasicAuthMiddleware(userService, hashImpl);
 const authorizationMiddleware = new AuthorizationBearer(userService);
@@ -66,7 +69,8 @@ const lentItemRouter = new LentItemRouterImpl(
   lentItemHandler,
   authorizationMiddleware
 );
+const fileRouter = new FileRouterImpl(fileHandler, authorizationMiddleware);
 
 connectDatabase();
 
-startServer([userRouter, itemRouter, lentItemRouter]).start();
+startServer([userRouter, itemRouter, lentItemRouter, fileRouter]).start();
